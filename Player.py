@@ -4,7 +4,7 @@ import numpy as np
 from abc import abstractmethod
 from typing import Optional
 
-from Gomoku import Board
+from Board import Board
 from BoardGUI import BoardGUI
 
 

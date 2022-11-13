@@ -1,5 +1,5 @@
 from time import sleep
-from Gomoku import Board, BLACK
+from Board import Board, BLACK
 from Player import Player
 
 

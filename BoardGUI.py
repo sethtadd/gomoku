@@ -4,7 +4,7 @@ import logging
 
 from threading import Thread
 
-from Gomoku import Board
+from Board import Board
 
 COLOR_BLACK = (0, 0, 0)
 COLOR_WHITE = (255, 255, 255)

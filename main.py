@@ -1,6 +1,6 @@
 from BoardGUI import BoardGUI
 from GameController import GameController
-from Gomoku import Board
+from Board import Board
 from Player import InputPlayer
 from Player import RandomPlayer
 
