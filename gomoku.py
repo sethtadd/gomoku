@@ -8,9 +8,9 @@ WHITE = 1
 
 
 class Board:
-    def __init__(self, dims: tuple[int, int] = (8, 8)):
-        self.dims = dims
-        self.pieces = np.zeros((2, dims[0], dims[1]))  # the first dim represents the piece color, black is 0
+    def __init__(self, dim: int = 8):
+        self.dim = dim
+        self.pieces = np.zeros((2, dim, dim))  # the first dim represents the piece color, black is 0
         self.turn = BLACK
         self.game_over_str = ''
 
@@ -35,8 +35,26 @@ class Board:
         elif 0 not in self.pieces:
             self.game_over_str = 'GAME OVER: draw'
 
+    def get_positions(self) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
+        black_positions = np.transpose(np.array(np.nonzero(self.pieces[BLACK])))
+        white_positions = np.transpose(np.array(np.nonzero(self.pieces[WHITE])))
+        black_positions = [tuple(coord) for coord in black_positions]
+        white_positions = [tuple(coord) for coord in white_positions]
+        return (black_positions, white_positions)
+
+    def get_open_positions(self) -> set[tuple[int, int]]:
+        open_positions = set()
+        # populate with all possible positions
+        for i in range(self.pieces.shape[1]):
+            for j in range(self.pieces.shape[2]):
+                open_positions.add((i, j))
+        # remove all occupied positions
+        black_positions, white_positions = self.get_positions()
+        open_positions.difference_update(black_positions + white_positions)
+        return open_positions
+
     def check_matrix_for_contiguous(self, num: int = 5) -> bool:
-        cross_sections: set[tuple] = set()
+        cross_sections = set()
         cols = self.groups(self.pieces[self.turn], lambda x, y: x)
         rows = self.groups(self.pieces[self.turn], lambda x, y: y)
         fdiag = self.groups(self.pieces[self.turn], lambda x, y: x + y)
@@ -67,7 +85,7 @@ class Board:
 
     # https://stackoverflow.com/a/43311126/1781821
     @staticmethod
-    def groups(data: np.ndarray, func) -> list[np.ndarray]:
+    def groups(data: np.ndarray, func) -> list:
         grouping = defaultdict(list)
         for y in range(len(data)):
             for x in range(len(data[y])):
