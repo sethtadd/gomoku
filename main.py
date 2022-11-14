@@ -1,11 +1,10 @@
 from time import sleep
+
+from Board import Board
 from BoardGUI import BoardGUI
 from Engine import Engine
 from GameController import GameController
-from Board import Board
 from Player import InputPlayer
-from Player import RandomPlayer
-
 
 board = Board(dim=3, num_to_win=3)
 boardGUI = BoardGUI(board, 1000)

@@ -1,6 +1,5 @@
 from collections import defaultdict
 from functools import partial
-from queue import Queue
 
 import numpy as np
 
@@ -13,7 +12,9 @@ class Board:
     def __init__(self, dim: int = 8, num_to_win: int = 5):
         self.dim = dim
         self.num_to_win = num_to_win
-        self.pieces = np.zeros((2, dim, dim))  # the first dim represents the piece color, black is 0
+        self.pieces = np.zeros(
+            (2, dim, dim)
+        )  # the first dim represents the piece color, black is 0
         self.turn = BLACK
         self.winner = None
         self.move_history = []
@@ -33,7 +34,10 @@ class Board:
             return False
 
         # check for move position already occupied
-        if self.pieces[BLACK][move[0]][move[1]] != 0 or self.pieces[WHITE][move[0]][move[1]] != 0:
+        if (
+            self.pieces[BLACK][move[0]][move[1]] != 0
+            or self.pieces[WHITE][move[0]][move[1]] != 0
+        ):
             return False
 
         self.move_history.append(move)
@@ -60,7 +64,9 @@ class Board:
         else:
             return False
 
-    def get_closed_positions(self) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
+    def get_closed_positions(
+        self,
+    ) -> tuple[list[tuple[int, int]], list[tuple[int, int]]]:
         black_positions = np.transpose(np.array(np.nonzero(self.pieces[BLACK])))
         white_positions = np.transpose(np.array(np.nonzero(self.pieces[WHITE])))
         black_positions = [tuple(coord) for coord in black_positions]
@@ -92,8 +98,16 @@ class Board:
         cross_sections.update(rows)
         cross_sections.update(fdiag)
         cross_sections.update(bdiag)
-        winning_cross_sections = set(filter(lambda arr: len(arr) >= self.num_to_win, cross_sections))  # cross-sections shorter than self.num_to_win can't be winning
-        winning_cross_sections = set(filter(partial(self.check_array_for_contiguous, self.num_to_win), cross_sections))
+        # cross-sections shorter than self.num_to_win can't be winning
+        winning_cross_sections = set(
+            filter(lambda arr: len(arr) >= self.num_to_win, cross_sections)
+        )
+        winning_cross_sections = set(
+            filter(
+                partial(self.check_array_for_contiguous, self.num_to_win),
+                cross_sections,
+            )
+        )
         return len(winning_cross_sections) != 0
 
     @staticmethod

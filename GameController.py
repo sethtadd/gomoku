@@ -1,9 +1,11 @@
-from Board import Board, BLACK, WHITE
+from Board import BLACK, WHITE, Board
 from Player import Player
 
 
 class GameController:
-    def __init__(self, board: Board, player_black: Player, player_white: Player) -> None:
+    def __init__(
+        self, board: Board, player_black: Player, player_white: Player
+    ) -> None:
         self.board = board
         self.player_black = player_black
         self.player_white = player_white
@@ -16,5 +18,11 @@ class GameController:
                 move: tuple[int, int] = self.player_white.get_move(self.board)
             self.board.push_move(move)
         else:
-            print('GAME OVER')
-            print('black wins' if self.board.winner == BLACK else 'white wins' if self.board.winner == WHITE else 'draw')
+            print("GAME OVER")
+            print(
+                "black wins"
+                if self.board.winner == BLACK
+                else "white wins"
+                if self.board.winner == WHITE
+                else "draw"
+            )

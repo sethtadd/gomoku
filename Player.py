@@ -1,14 +1,14 @@
 import random
-from time import sleep
-import numpy as np
-
 from abc import abstractmethod
+from time import sleep
+
+import numpy as np
 
 from Board import Board
 from BoardGUI import BoardGUI
 
 
-class Player():
+class Player:
     def __init__(self) -> None:
         pass
 
