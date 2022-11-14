@@ -34,7 +34,7 @@ class Engine(Player):
             _, evaluation = self.evaluate_board_recursive(board)
             moves[move] = -evaluation
             board.pop_move()
-        best_move = max(moves, key=lambda k: best_move.get)  # type: ignore
+        best_move = max(moves, key=moves.get)  # type: ignore
         return best_move, moves[best_move]
 
     def get_move(self, board: Board) -> tuple[int, int]:
