@@ -1,3 +1,5 @@
+import logging
+
 from Board import DRAW, Board
 from Player import Player
 
@@ -38,8 +40,9 @@ class Engine(Player):
         return best_move, moves[best_move]
 
     def get_move(self, board: Board) -> tuple[int, int]:
+        logging.info("calculating move")
         best_move, evaluation = self.evaluate_board_recursive(board)
-        print("evaluation:", evaluation)
+        logging.info(f"move evaluation: {evaluation}")
         return best_move
 
     # def evaluate_moves(self, board: Board, move: tuple[int, int]):

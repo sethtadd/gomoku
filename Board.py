@@ -1,3 +1,4 @@
+import logging
 from collections import defaultdict
 from functools import partial
 
@@ -10,6 +11,7 @@ DRAW = -1
 
 class Board:
     def __init__(self, dim: int = 8, num_to_win: int = 5):
+        logging.info("initializing Board")
         self.dim = dim
         self.num_to_win = num_to_win
         self.pieces = np.zeros(
@@ -30,7 +32,7 @@ class Board:
 
     def push_move(self, move: tuple[int, int]) -> bool:
         # check for game over
-        if self.winner:
+        if self.winner is not None:
             return False
 
         # check for move position already occupied

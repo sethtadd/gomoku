@@ -25,18 +25,17 @@ def threaded(fn):
 
 class BoardGUI:
     def __init__(self, board: Board, screen_size: int) -> None:
+        logging.info("initializing BoardGUI")
         self.board = board
         self.size = (screen_size, screen_size)
         self.line_spacing = self.size[0] / (self.board.dim + 1)
         self.surface = None
         self.stop_loop = False
         self.click_pos = None
-
         self.load_images()
 
-        logging.basicConfig(filename="gui.log", level=logging.DEBUG)
-
     def load_images(self) -> None:
+        logging.info("loading images")
         # board
         self.img_wood_background = pygame.image.load(
             os.path.join("resources", "cherry_wood.png")
@@ -61,10 +60,11 @@ class BoardGUI:
 
     @threaded
     def start_gui(self) -> None:
+        logging.info("starting GUI on separate thread")
         pygame.init()
         pygame.display.set_caption("Gomoku")
         self.surface = pygame.display.set_mode(self.size)
-        logging.info("starting loop...")
+        logging.info("starting loop")
         self.loop()
 
     def loop(self) -> None:
@@ -80,7 +80,7 @@ class BoardGUI:
                 self.draw_game_over_surface()
             pygame.display.flip()
         else:
-            logging.info("stopping loop...")
+            logging.info("stopping loop")
             pygame.quit()
 
     def draw_board(self) -> None:

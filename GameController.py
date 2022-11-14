@@ -1,3 +1,5 @@
+import logging
+
 from Board import BLACK, WHITE, Board
 from Player import Player
 
@@ -11,6 +13,7 @@ class GameController:
         self.player_white = player_white
 
     def start_game(self) -> None:
+        logging.info("starting game")
         while self.board.winner is None:
             if self.board.turn == BLACK:
                 move: tuple[int, int] = self.player_black.get_move(self.board)
@@ -18,11 +21,13 @@ class GameController:
                 move: tuple[int, int] = self.player_white.get_move(self.board)
             self.board.push_move(move)
         else:
-            print("GAME OVER")
-            print(
-                "black wins"
-                if self.board.winner == BLACK
-                else "white wins"
-                if self.board.winner == WHITE
-                else "draw"
+            logging.info(
+                "game over: "
+                + (
+                    "black wins"
+                    if self.board.winner == BLACK
+                    else "white wins"
+                    if self.board.winner == WHITE
+                    else "draw"
+                )
             )

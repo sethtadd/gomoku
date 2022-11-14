@@ -1,3 +1,4 @@
+import logging
 import random
 from abc import abstractmethod
 from time import sleep
@@ -23,6 +24,7 @@ class RandomPlayer(Player):
         self.delay = delay
 
     def get_move(self, board: Board) -> tuple[int, int]:
+        logging.info("generating random move input")
         if self.delay is not None:
             sleep(self.delay)
         open_positions = board.get_open_positions()
@@ -37,6 +39,7 @@ class InputPlayer(Player):
         self.boardGUI = boardGUI
 
     def get_move(self, board: Board) -> tuple[int, int]:
+        logging.info("getting player move input")
         self.boardGUI.click_pos = None
 
         # loop until user clicks a position
@@ -53,7 +56,7 @@ class InputPlayer(Player):
         pos = tuple(pos)
 
         if pos not in board.get_open_positions():
-            print("can't move there!")
+            logging.info("player input illegal move, re-quering for player move input")
             return self.get_move(board)
         else:
             return pos
