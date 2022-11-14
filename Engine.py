@@ -1,65 +1,44 @@
 import logging
 
+from ordered_set import OrderedSet
+
 from Board import DRAW, Board
 from Player import Player
 
 
 class Engine(Player):
     def __init__(self) -> None:
-        pass
-
-    # def evaluate_board(self, board: Board) -> float:
-    #     # check for game over
-    #     if board.winner is not None:
-    #         if board.winner == DRAW:
-    #             return 0
-    #         elif board.winner == board.turn:
-    #             return 1
-    #         else:
-    #             return -1
-    #     # return random evaluation
-    #     return (random() * 2 - 1) * 0.9  # interval [-0.9, 0.9)
+        self.evaluated_boards = {}
 
     def evaluate_board_recursive(self, board: Board) -> tuple[tuple[int, int], float]:
+        if board in self.evaluated_boards:
+            return self.evaluated_boards[board]
         # check for game over
         if board.winner is not None:
             if board.winner == DRAW:
                 return (-1, -1), 0
-            elif board.winner == board.turn:
-                return (-1, -1), 1
-            else:
+            else:  # if you're handed a board with game over, you've lost
                 return (-1, -1), -1
         # else do recursive evaluation
-        moves: dict[tuple[int, int], float] = dict.fromkeys(board.get_open_positions())  # type: ignore
+        moves: OrderedSet[tuple[int, int]] = board.get_open_positions()
+        move_evals_dict: dict[tuple[int, int], float] = {}
         for move in moves:
-            board.push_move(move)
+            if not board.push_move(move):
+                logging.error("COULD NOT PUSH MOVE")
             _, evaluation = self.evaluate_board_recursive(board)
-            moves[move] = -evaluation
+            move_evals_dict[move] = -evaluation
             board.pop_move()
-        best_move = max(moves, key=moves.get)  # type: ignore
-        return best_move, moves[best_move]
+        best_move = max(move_evals_dict, key=move_evals_dict.get)  # type: ignore
+        evaluation = move_evals_dict[best_move]
+        self.evaluated_boards[board] = (best_move, evaluation)
+        return best_move, evaluation
 
     def get_move(self, board: Board) -> tuple[int, int]:
         logging.info("calculating move")
         best_move, evaluation = self.evaluate_board_recursive(board)
+        logging.info(f"board states considered: {len(self.evaluated_boards)}")
         logging.info(f"move evaluation: {evaluation}")
         return best_move
-
-    # def evaluate_moves(self, board: Board, move: tuple[int, int]):
-    #     moves = dict.fromkeys(board.get_open_positions(), None)
-    #     for move in moves:
-    #         temp_board = board.deepcopy()
-    #         temp_board.push_move(move)
-    #         evaluation = self.evaluate_board(temp_board)
-    #         moves[move] = evaluation
-
-    # def evaluate_move(self, board: Board) -> float:
-    #     moves = dict.fromkeys(board.get_open_positions(), None)
-    #     for move in moves:
-    #         temp_board = board.deepcopy()
-    #         temp_board.push_move(move)
-    #         evaluation = self.evaluate_board(temp_board)
-    #         moves[move] = evaluation
 
 
 if __name__ == "__main__":

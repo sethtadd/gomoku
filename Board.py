@@ -3,6 +3,7 @@ from collections import defaultdict
 from functools import partial
 
 import numpy as np
+from ordered_set import OrderedSet
 
 BLACK = 0
 WHITE = 1
@@ -28,6 +29,7 @@ class Board:
         board_copy.pieces = self.pieces.copy()
         board_copy.turn = self.turn
         board_copy.winner = self.winner
+        board_copy.move_history = self.move_history.copy()
         return board_copy
 
     def push_move(self, move: tuple[int, int]) -> bool:
@@ -75,15 +77,18 @@ class Board:
         white_positions = [tuple(coord) for coord in white_positions]
         return (black_positions, white_positions)
 
-    def get_open_positions(self) -> set[tuple[int, int]]:
-        open_positions = set()
-        # populate with all possible positions
-        for i in range(self.pieces.shape[1]):
-            for j in range(self.pieces.shape[2]):
-                open_positions.add((i, j))
+    def get_open_positions(self) -> OrderedSet[tuple[int, int]]:
+        all_positions = OrderedSet(
+            [
+                (i, j)
+                for i in range(self.pieces.shape[1])
+                for j in range(self.pieces.shape[2])
+            ]
+        )
         # remove all occupied positions
         black_positions, white_positions = self.get_closed_positions()
-        open_positions.difference_update(black_positions + white_positions)
+        closed_positions = OrderedSet(black_positions + white_positions)
+        open_positions: OrderedSet = OrderedSet(all_positions - closed_positions)
         return open_positions
 
     def check_matrix_for_contiguous(self) -> bool:
@@ -111,6 +116,14 @@ class Board:
             )
         )
         return len(winning_cross_sections) != 0
+
+    def __hash__(self):
+        # FIXME did the board-to-int overflow? would need massive int
+        # pieces_flat_arr = self.pieces.flatten()
+        # return int(pieces_flat_arr.dot(2 ** np.arange(pieces_flat_arr.size)[::-1]))
+        # FIXME is move_history not working correctly? hashing with it causes Engine to play poorly
+        # return hash(tuple(self.move_history))
+        return hash(tuple(self.pieces.flatten()))
 
     @staticmethod
     def check_array_for_contiguous(num: int, array: np.ndarray) -> bool:

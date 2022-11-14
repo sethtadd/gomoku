@@ -16,9 +16,15 @@ class GameController:
         logging.info("starting game")
         while self.board.winner is None:
             if self.board.turn == BLACK:
-                move: tuple[int, int] = self.player_black.get_move(self.board)
+                logging.info("requesting black move")
+                move: tuple[int, int] = self.player_black.get_move(
+                    self.board.deepcopy()
+                )
             else:  # self.board.turn == WHITE
-                move: tuple[int, int] = self.player_white.get_move(self.board)
+                logging.info("requesting white move")
+                move: tuple[int, int] = self.player_white.get_move(
+                    self.board.deepcopy()
+                )
             self.board.push_move(move)
         else:
             logging.info(
