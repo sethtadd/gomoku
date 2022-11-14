@@ -64,6 +64,7 @@ class BoardGUI:
         pygame.init()
         pygame.display.set_caption("Gomoku")
         self.surface = pygame.display.set_mode(self.size)
+        pygame.display.set_icon(pygame.image.load(os.path.join("resources", "dot.ico")))
         logging.info("starting loop")
         self.loop()
 
