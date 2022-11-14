@@ -1,5 +1,4 @@
-from time import sleep
-from Board import Board, BLACK
+from Board import Board, BLACK, WHITE
 from Player import Player
 
 
@@ -9,14 +8,13 @@ class GameController:
         self.player_black = player_black
         self.player_white = player_white
 
-    def start_game(self, delay: float) -> None:
-        while self.board.game_over_str == '':
-            if delay is not None:
-                sleep(delay)
+    def start_game(self) -> None:
+        while self.board.winner is None:
             if self.board.turn == BLACK:
                 move: tuple[int, int] = self.player_black.get_move(self.board)
             else:  # self.board.turn == WHITE
                 move: tuple[int, int] = self.player_white.get_move(self.board)
             self.board.push_move(move)
         else:
-            print(self.board.game_over_str)
+            print('GAME OVER')
+            print('black wins' if self.board.winner == BLACK else 'white wins' if self.board.winner == WHITE else 'draw')

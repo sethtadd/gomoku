@@ -1,16 +1,16 @@
 import random
+from time import sleep
 import numpy as np
 
 from abc import abstractmethod
-from typing import Optional
 
 from Board import Board
 from BoardGUI import BoardGUI
 
 
 class Player():
-    def __init__(self, engine: bool = False, boardGUI: Optional[BoardGUI] = None) -> None:
-        self.boardGUI = boardGUI
+    def __init__(self) -> None:
+        pass
 
     @abstractmethod
     def get_move(self, board: Board) -> tuple[int, int]:
@@ -18,10 +18,13 @@ class Player():
 
 
 class RandomPlayer(Player):
-    def __init__(self) -> None:
+    def __init__(self, delay=None) -> None:
         super().__init__()
+        self.delay = delay
 
     def get_move(self, board: Board) -> tuple[int, int]:
+        if self.delay is not None:
+            sleep(self.delay)
         open_positions = board.get_open_positions()
         # choose random open position
         move = random.choice(list(open_positions))
