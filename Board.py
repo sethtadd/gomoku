@@ -117,13 +117,14 @@ class Board:
         )
         return len(winning_cross_sections) != 0
 
-    def __hash__(self):
-        # FIXME did the board-to-int overflow? would need massive int
-        # pieces_flat_arr = self.pieces.flatten()
-        # return int(pieces_flat_arr.dot(2 ** np.arange(pieces_flat_arr.size)[::-1]))
-        # FIXME is move_history not working correctly? hashing with it causes Engine to play poorly
-        # return hash(tuple(self.move_history))
+    def __hash__(self) -> int:
         return hash(tuple(self.pieces.flatten()))
+
+    # write docs explaining that move order does not affect Board uniqueness, just the piece positions
+    def __eq__(self, other) -> bool:
+        if type(other) is type(self):
+            return tuple(self.pieces.flatten()) == tuple(other.pieces.flatten())
+        return False
 
     @staticmethod
     def check_array_for_contiguous(num: int, array: np.ndarray) -> bool:

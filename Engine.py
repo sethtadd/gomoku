@@ -11,8 +11,9 @@ class Engine(Player):
         self.evaluated_boards = {}
 
     def evaluate_board_recursive(self, board: Board) -> tuple[tuple[int, int], float]:
-        if board in self.evaluated_boards:
-            return self.evaluated_boards[board]
+        if hash(board) in self.evaluated_boards:
+            move, evaluation = self.evaluated_boards[hash(board)]
+            return (move, evaluation)
         # check for game over
         if board.winner is not None:
             if board.winner == DRAW:
@@ -30,7 +31,7 @@ class Engine(Player):
             board.pop_move()
         best_move = max(move_evals_dict, key=move_evals_dict.get)  # type: ignore
         evaluation = move_evals_dict[best_move]
-        self.evaluated_boards[board] = (best_move, evaluation)
+        self.evaluated_boards[hash(board)] = (best_move, evaluation)
         return best_move, evaluation
 
     def get_move(self, board: Board) -> tuple[int, int]:
