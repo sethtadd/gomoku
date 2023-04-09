@@ -3,10 +3,10 @@ import logging
 from ordered_set import OrderedSet
 
 from Board import DRAW, Board
-from Player import Player
+from Player import Player, process
 
 
-class Engine(Player):
+class BruteForceEngine(Player):
     def __init__(self) -> None:
         self.evaluated_boards = {}
 
@@ -44,6 +44,6 @@ class Engine(Player):
 
 if __name__ == "__main__":
     board = Board(dim=3, num_to_win=3)
-    engine = Engine()
+    engine = BruteForceEngine()
     board_eval_recursive = engine.evaluate_board_recursive(board)
     print("board_eval_recursive:", board_eval_recursive)

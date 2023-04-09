@@ -117,6 +117,7 @@ class Board:
         )
         return len(winning_cross_sections) != 0
 
+    # TODO for chess, __hash__ and __eq__ should include the turn
     def __hash__(self) -> int:
         return hash(tuple(self.pieces.flatten()))
 
